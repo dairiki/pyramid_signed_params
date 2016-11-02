@@ -92,6 +92,41 @@ class JWTSignedParamsService(object):
         self.secret_provider = request.find_service(IJWTSecretProvider)
 
     def sign_query(self, params, max_age=None, kid=None):
+        """Sign query parameters
+
+        ``Params`` should be an iterable of two-tuples, or an object which
+        has an ``.items()`` method which returns a sequence of two-tuples.
+        The elements of the two-tuples should be text strings (or coercible
+        to text strings.)
+
+        Returns a sequence of two-tuples, suitable for passing to
+        ``urlencode`` (or similar) to generate a query string (or POST
+        body.)
+
+        ``Max_age``, if specified should be an integer or a ``timedelta``
+        instance specifying how long the signature will be good for.
+        If ``max_age`` is not specified or is ``None``, the signature will
+        not expire.
+
+        ``Kid`` should either be ``None`` or a text string.  It is passed
+        to the service registered ``IJWTSecretProvider`` to retrieve the
+        signing secret(s).  If the default secret provider is used, setting
+        ``kid`` to ``"csrf"`` will result in signatures which are only
+        valid for the current session.  (The signatures will be invalidated
+        with the CSRF token changes.)
+
+        Note that multiple set of parameters can be signed with different
+        parameters::
+
+            query = []
+            query.extend(request.sign_params({'long': 'time'}))
+            query.extend(request.sign_params({'temp': 'hot'}, max_age=60))
+            url = request.route_url('myroute', _query=query)
+
+        When the signed parameters are verified, the parameters from all
+        valid tokens will be merged.
+
+        """
         if hasattr(params, 'items'):
             params = params.items()
         params = [(_to_text(key), _to_text(value)) for key, value in params]
@@ -112,6 +147,17 @@ class JWTSignedParamsService(object):
         return (('_sp', text_(token)),)
 
     def signed_params(self, params):
+        """Get signed parameters.
+
+        ``Params`` should be an iterable of two-tuples or text
+        strings, or an object which has an ``.items()`` method which
+        returns such a sequence of two-tuples.
+
+        Returns a multidict containing all parameters found in
+        ``params`` which have valid signatures.  Unrecognized parameters
+        found in ``params``, or those with invalid signatures will be ignored.
+
+        """
         tokens = _getall(params, '_sp')
         data = []
         for token in tokens:
