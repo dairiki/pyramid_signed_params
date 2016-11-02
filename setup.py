@@ -65,7 +65,7 @@ setup(
     author='Jeff Dairiki',
     author_email='dairiki@dairiki.org',
     license='BSD',
-    url="https://pypi.python.org/pypi/pyramid-signed-params",
+    url="https://github.com/dairiki/pyramid_signed_params",
     keywords='web pyramid cryptography query_string',
 
     packages=find_packages(),
