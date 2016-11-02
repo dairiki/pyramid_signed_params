@@ -2,6 +2,8 @@
 Pyramid Signed Params
 #####################
 
+|version| |py_versions| |license| |build status|
+
 ***********
 Description
 ***********
@@ -48,3 +50,35 @@ Authors
 `Jeff Dairiki`_
 
 .. _Jeff Dairiki: mailto:dairiki@dairiki.org
+
+
+.. ==== Badges ====
+
+.. |build status| image::
+    https://travis-ci.org/dairiki/pyramid_signed_params.svg?branch=master
+    :target: https://travis-ci.org/dairiki/pyramid_signed_params
+
+.. |downloads| image::
+    https://img.shields.io/pypi/dm/pyramid_signed_params.svg
+    :target: https://pypi.python.org/pypi/pyramid_signed_params/
+    :alt: Downloads
+.. |version| image::
+    https://img.shields.io/pypi/v/pyramid_signed_params.svg
+    :target: https://pypi.python.org/pypi/pyramid_signed_params/
+    :alt: Latest Version
+.. |py_versions| image::
+    https://img.shields.io/pypi/pyversions/pyramid_signed_params.svg
+    :target: https://pypi.python.org/pypi/pyramid_signed_params/
+    :alt: Supported Python versions
+.. |py_implementation| image::
+    https://img.shields.io/pypi/implementation/pyramid_signed_params.svg
+    :target: https://pypi.python.org/pypi/pyramid_signed_params/
+    :alt: Supported Python versions
+.. |license| image::
+    https://img.shields.io/pypi/l/pyramid_signed_params.svg
+    :target: https://github.com/dairiki/pyramid_signed_params/blob/master/LICENSE.txt
+    :alt: License
+.. |dev_status| image::
+    https://img.shields.io/pypi/status/pyramid_signed_params.svg
+    :target: https://pypi.python.org/pypi/pyramid_signed_params/
+    :alt: Development Status
