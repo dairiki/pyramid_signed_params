@@ -2,7 +2,7 @@
 Changes
 *******
 
-Release 0.1 (unreleased)
-========================
+Release 0.1a2 (2016-11-02)
+==========================
 
-(Work in progress.)
+Initial release.

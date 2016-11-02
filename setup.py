@@ -5,7 +5,7 @@ import sys
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
-VERSION = '0.1.dev0'
+VERSION = '0.1a3'
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
@@ -46,7 +46,7 @@ cmdclass = {'test': PyTest}
 setup(
     name='pyramid-signed-params',
     version=VERSION,
-    description='Signed query parameters for pyramid',
+    description='Cryptographically signed query parameters for pyramid',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
         "Framework :: Pyramid",
@@ -64,7 +64,8 @@ setup(
         ],
     author='Jeff Dairiki',
     author_email='dairiki@dairiki.org',
-    url='',
+    license='BSD',
+    url="https://pypi.python.org/pypi/pyramid-signed-params",
     keywords='web pyramid cryptography query_string',
 
     packages=find_packages(),

@@ -1,6 +1,6 @@
-#####################
-Pyramid Signed Params
-#####################
+#####################################################
+Cryptographically Signed Query Parameters for Pyramid
+#####################################################
 
 |version| |py_versions| |license| |build status|
 
@@ -18,6 +18,7 @@ Other use cases include being able to generate URLs (e.g. to be included in
 emails) which can be used to bypass the normal authentication/authorization
 mechanisms.
 
+.. _pyramid: https://trypyramid.com/
 
 *******************
 Basic Usage Example
