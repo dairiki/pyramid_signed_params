@@ -1,0 +1,5 @@
+[run]
+source = pyramid_signed_params
+
+[report]
+omit = */tests*

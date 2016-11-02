@@ -1,0 +1,8 @@
+*.pyc
+*~
+/pyramid_signed_params.egg-info
+/.coverage
+/.tox
+/.cache
+/.eggs
+/htmlcov/
