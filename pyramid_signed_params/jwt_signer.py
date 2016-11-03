@@ -16,6 +16,7 @@ from jwt.exceptions import (
     InvalidTokenError,
     )
 from pyramid.compat import binary_type, bytes_, reraise, text_, text_type
+from pyramid.exceptions import ConfigurationError
 from pyramid.settings import aslist
 from webob.multidict import MultiDict
 from zope.interface import implementer
@@ -78,9 +79,9 @@ class JWTSecretProviderFactory(object):
         if len(secrets) > 0:
             return cls(secrets)
         else:
-            log.warn("No secret(s) configured, please set %s in your settings",
-                     name)
-            return None
+            raise ConfigurationError(
+                "No secret(s) configured, please set %s in your settings"
+                % name)
 
 
 @implementer(ISignedParamsService)

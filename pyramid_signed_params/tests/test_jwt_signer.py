@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from itertools import product
 
 import jwt
+from pyramid.exceptions import ConfigurationError
 import pytest
 from webob.multidict import MultiDict
 
@@ -84,13 +85,12 @@ class TestJWTSecretProviderFactory(object):
         '   \n\t\n',
         None,
         ])
-    def test_from_settings_no_secrets(self, secrets, caplog):
+    def test_from_settings_no_secrets(self, secrets):
         settings = {}
         if secrets:
             settings['pyramid_signed_params.secrets'] = secrets
-        factory = JWTSecretProviderFactory.from_settings(settings)
-        assert factory is None
-        assert "No secret(s) configured" in caplog.text
+        with pytest.raises(ConfigurationError):
+            JWTSecretProviderFactory.from_settings(settings)
 
 
 class TestJWTSignedParamsService(object):

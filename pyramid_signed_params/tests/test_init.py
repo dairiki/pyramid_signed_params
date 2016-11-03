@@ -35,10 +35,19 @@ class Test_includeme(object):
         yield config
         testing.tearDown()
 
-    def test(self, request_, params):
+    def test(self, config, request_, params):
         signed = request_.sign_query(params)
         request_.GET.extend(signed)
         assert request_.signed_params == params
+
+    def test_warns_if_no_signer_configured(self, recwarn):
+        config = testing.setUp()
+        try:
+            includeme(config)
+            w = recwarn.pop(UserWarning)
+        finally:
+            testing.tearDown()
+        assert "No service has been configured" in str(w.message)
 
 
 def test_signed_params(request_, params, signed_params_service):
