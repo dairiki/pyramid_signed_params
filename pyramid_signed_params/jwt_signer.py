@@ -74,7 +74,7 @@ class JWTSecretProviderFactory(object):
 
     @classmethod
     def from_settings(cls, settings, prefix='pyramid_signed_params.'):
-        name = prefix + 'secrets'
+        name = prefix + 'secret'
         secrets = aslist(settings.get(name, ''), flatten=False)
         if len(secrets) > 0:
             return cls(secrets)

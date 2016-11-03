@@ -26,7 +26,7 @@ class Test_includeme(object):
     # This is a basic functional test of the whole system.
     @pytest.fixture
     def settings(self):
-        return {'pyramid_signed_params.secrets': 'sekret'}
+        return {'pyramid_signed_params.secret': 'sekret'}
 
     @pytest.fixture
     def config(self, settings):

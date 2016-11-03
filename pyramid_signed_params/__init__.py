@@ -14,7 +14,7 @@ def includeme(config):
     config.add_request_method(sign_query)
 
     settings = config.get_settings()
-    if 'pyramid_signed_params.secrets' in settings:
+    if 'pyramid_signed_params.secret' in settings:
         config.include('pyramid_signed_params.jwt_signer')
     try:
         config.find_service_factory(ISignedParamsService)
@@ -23,7 +23,7 @@ def includeme(config):
             "No service has been configured ISignedParamsService. "
             "The request methods added by pyramid_signed_params will not "
             "work without one. (Consider setting "
-            "pyramid_signed_params.secrets in your .ini file.)")
+            "pyramid_signed_params.secret in your .ini file.)")
 
 
 def signed_params(request):

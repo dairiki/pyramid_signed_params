@@ -75,7 +75,7 @@ class TestJWTSecretProviderFactory(object):
 
     def test_from_settings(context, request_):
         settings = {
-            'pyramid_signed_params.secrets': '  foo\n\n bar\n\n',
+            'pyramid_signed_params.secret': '  foo\n\n bar\n\n',
             }
         factory = JWTSecretProviderFactory.from_settings(settings)
         secret_provider = factory(context, request_)
@@ -88,7 +88,7 @@ class TestJWTSecretProviderFactory(object):
     def test_from_settings_no_secrets(self, secrets):
         settings = {}
         if secrets:
-            settings['pyramid_signed_params.secrets'] = secrets
+            settings['pyramid_signed_params.secret'] = secrets
         with pytest.raises(ConfigurationError):
             JWTSecretProviderFactory.from_settings(settings)
 
