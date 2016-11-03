@@ -2,7 +2,7 @@
 Changes
 *******
 
-Release 0.1a4 (Unreleased)
+Release 0.1a4 (2016-11-02)
 ==========================
 
 - The setting for configuring the JWT signing secret(s) has been
