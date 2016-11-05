@@ -20,6 +20,63 @@ mechanisms.
 
 .. _pyramid: https://trypyramid.com/
 
+************
+Installation
+************
+
+``Pyramid-signed-params`` can be installed from PyPI_ using ``pip`` or
+``easy_install`` (or ``buildout``.)  You should probably be installing it in a virtual
+environment.
+
+.. _PyPI: https://pypi.python.org/pypi/pyramid-signed-params
+
+*************
+Configuration
+*************
+
+You must configure at least one signing secret in your app settings.
+The secret should be a random, unguessable string.  E.g. in your app’s
+``.ini`` file::
+
+  pyramid_signed_params.secret = RGWO7nZ6W6AiPIUcXQN2iahJIThwH9BbpyZ7Lc1XfaOkPGt1GY
+
+.. hint::
+
+  You can specify multiple signing keys (one per line.)  If
+  you do, the first key will be used for signing, while all keys will
+  be tried when verifying signatures.  This can be useful when rolling
+  out a new signing key.
+
+Activate the package by including it in your pyramid application.
+
+.. code-block:: python
+
+  config.include('pyramid-signed-params')
+
+This will add two new attributes to pyramid’s ``request``.
+
+- ``request.sign_query(query, max_age=None, kid=None)``
+
+  Used to sign query arguments, e.g.
+
+  .. code-block:: python
+
+    # Pass the current URL as a signed *return_url* parameter to another view
+    query = {'return_url': request.url}
+    other_url = request.route_url('other', _query=request.sign_query(query))
+
+  The ``max_age`` parameter can be used to generate signatures which expire after a certain
+  amount of time.
+
+  Passing ``kid="csrf"`` will create signatures which will be
+  invalidated whenever the session’s CSRF token is changed.
+
+- ``request.signed_params``
+
+  This *reified* property will contain a multidict populated with all
+  parameters passed to the request which were signed with a valid
+  signature.
+
 *******************
 Basic Usage Example
 *******************
@@ -43,6 +100,14 @@ Then, in the change-pw view::
 Note that because we passed ``max_age=3600`` to ``sign_query``, the
 URL will only work for an hour.
 
+*******
+Caution
+*******
+
+This package provides no inherent protection against replay attacks.
+If an attacker has access to a set of signed parameters, he may pass
+those signed parameters, unmodified, to any URL within the app (or
+other apps sharing the same signing secret.)
 
 *******
 Authors
