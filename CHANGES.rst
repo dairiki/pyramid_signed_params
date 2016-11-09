@@ -2,6 +2,13 @@
 Changes
 *******
 
+Release 0.1a5 (unreleased)
+==========================
+
+- Remove the (broken) config-time warning issued if no service is
+  registered for ``ISignedParamsService``.  (When ``autocommit`` was
+  off, this warning was always being issued.)
+
 Release 0.1a4 (2016-11-02)
 ==========================
 
