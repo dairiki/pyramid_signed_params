@@ -2,7 +2,7 @@
 Changes
 *******
 
-Release 0.1a5 (unreleased)
+Release 0.1a5 (2016-11-13)
 ==========================
 
 - Remove the (broken) config-time warning issued if no service is
