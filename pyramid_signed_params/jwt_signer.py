@@ -87,6 +87,8 @@ class JWTSecretProviderFactory(object):
 @implementer(ISignedParamsService)
 class JWTSignedParamsService(object):
     algorithm = 'HS256'
+    accepted_algorithms = ('HS256', 'HS384', 'HS512')
+
     _utcnow = staticmethod(datetime.utcnow)  # testing
 
     def __init__(self, context, request):
@@ -181,7 +183,8 @@ class JWTSignedParamsService(object):
         have_decode_error = False
         for secret in secrets:
             try:
-                return jwt.decode(token, secret)
+                return jwt.decode(token, secret,
+                                  algorithms=self.accepted_algorithms)
             except ExpiredSignatureError:
                 # Signature expired. No point trying other secrets.
                 raise

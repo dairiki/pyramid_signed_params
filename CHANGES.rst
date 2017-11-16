@@ -2,6 +2,14 @@
 Changes
 *******
 
+Next Release
+============
+
+Security
+--------
+
+- Explicitly specify allowed algorithms when decoding JWTs.
+
 Release 0.1a5 (2016-11-13)
 ==========================
 

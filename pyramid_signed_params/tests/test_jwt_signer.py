@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 from datetime import datetime, timedelta
 from itertools import product
+import re
 
 import jwt
 from pyramid.exceptions import ConfigurationError
@@ -159,7 +160,12 @@ class TestJWTSignedParamsService(object):
         token = jwt.encode({}, 'secret', headers={'alg': 'bugger'})
         verified = service.signed_params({'_sp': token})
         assert len(verified) == 0
-        assert 'Algorithm not supported' in caplog.text
+        assert any(
+            re.search(r'Alg(orithm)?.*not (allowed|supported)',
+                      logrec.getMessage(),
+                      re.I)
+            for logrec in caplog.records
+            )
 
 
 class TestJWTSignedParamsServiceIntegration(object):
@@ -193,6 +199,7 @@ class TestJWTSignedParamsServiceIntegration(object):
     ])
 def test_to_text(obj, expected):
     assert _to_text(obj) == expected
+
 
 items = [
     ('k', 'v1'),
