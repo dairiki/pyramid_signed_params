@@ -5,6 +5,8 @@ Changes
 Next Release
 ============
 
+- Drop support for python 2.6.  Test under python 3.6.
+
 Security
 --------
 
