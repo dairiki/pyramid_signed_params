@@ -3,7 +3,6 @@ import os
 import sys
 
 from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
 
 VERSION = '0.1a5'
 
@@ -11,37 +10,19 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
-requires = [
-    'pyjwt',
+install_requires = [
+    'pyjwt >= 1.3',
     'pyramid',
     'pyramid_services',
     ]
 
-testing_extras = [
+tests_require = [
     'pytest >= 3.0',            # 3.0 required for pytest.approx
     'pytest-catchlog',
     ]
 
-
-class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
-
-cmdclass = {'test': PyTest}
+needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
+setup_requires = ['pytest-runner'] if needs_pytest else []
 
 setup(
     name='pyramid-signed-params',
@@ -70,14 +51,14 @@ setup(
 
     packages=find_packages(),
 
-    install_requires=requires,
 
     include_package_data=True,
     zip_safe=False,
 
-    tests_require=testing_extras,
-    cmdclass=cmdclass,
+    setup_requires=setup_requires,
+    install_requires=install_requires,
+    tests_require=tests_require,
     extras_require={
-        "testing": testing_extras,
+        "test": tests_require,
         },
     )
