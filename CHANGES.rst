@@ -2,8 +2,8 @@
 Changes
 *******
 
-Next Release
-============
+Release 0.1b2 (2017-11-16)
+==========================
 
 - Change the ``signed_params`` reified request method so that it
   catches ``UnicodeDecodeError``\s when accessing ``request.params``,
