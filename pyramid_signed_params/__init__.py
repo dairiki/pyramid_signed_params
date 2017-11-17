@@ -3,6 +3,8 @@
 """
 from __future__ import absolute_import
 
+from webob.multidict import MultiDict
+
 from .interfaces import ISignedParamsService
 
 
@@ -17,10 +19,18 @@ def includeme(config):
 
 
 def signed_params(request):
-    """ Get a multidict of any valid signed parameters
+    """ Get a multidict containing all valid signed parameters found.
+
     """
     signer = request.find_service(ISignedParamsService)
-    return signer.signed_params(request.params)
+    try:
+        params = request.params
+    except UnicodeDecodeError:
+        # If the HTTP request had improperly encoded data, there are
+        # no valid signed params.
+        return MultiDict()
+    else:
+        return signer.signed_params(params)
 
 
 def sign_query(request, params, max_age=None, kid=None):

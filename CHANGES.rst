@@ -2,6 +2,14 @@
 Changes
 *******
 
+Next Release
+============
+
+- Change the ``signed_params`` reified request method so that it
+  catches ``UnicodeDecodeError``\s when accessing ``request.params``,
+  and returns an empty dict.  (If the parameters are not properly
+  encoded, there are no valid signed parameters.)
+
 Release 0.1b1 (2017-11-16)
 ==========================
 

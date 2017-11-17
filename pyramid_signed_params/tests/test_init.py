@@ -46,6 +46,19 @@ def test_signed_params(request_, params, signed_params_service):
     assert signed_params(request_) == params
 
 
+@pytest.fixture
+def misencoded_request(request_):
+    request_.environ['QUERY_STRING'] = '\xb5'
+    with pytest.raises(UnicodeDecodeError):
+        request_.params
+    return request_
+
+
+@pytest.mark.usefixtures('signed_params_service')
+def test_signed_params_ignores_decode_errors(misencoded_request):
+    assert signed_params(misencoded_request) == {}
+
+
 def test_sign_query(request_, params, signed_params_service):
     signed = sign_query(request_, params)
     signed_params_service.signed_params(signed) == params
