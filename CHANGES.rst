@@ -2,6 +2,14 @@
 Changes
 *******
 
+Next Release
+============
+
+Packaging
+---------
+
+- Include LICENSE.txt and pytest.ini in sdist.
+
 Release 0.1b2 (2017-11-16)
 ==========================
 
