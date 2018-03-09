@@ -2,8 +2,13 @@
 Changes
 *******
 
-Next Release 0.1b5 (2018-03-08)
-===============================
+Release 0.1b6 (unreleased)
+==========================
+
+No changes yet.
+
+Release 0.1b5 (2018-03-08)
+==========================
 
 - Use the new in ``PyJWT`` 1.6 more specific ``InvalidSignatureError``
   in favor of the generic ``DecodeError`` to detect invalid signatures
