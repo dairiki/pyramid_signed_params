@@ -8,6 +8,8 @@ Next Release 0.1b5 (unreleased)
 Tests
 -----
 
+- Fix for changes in default log level in ``pytest`` 3.4.
+
 - As of ``pytest`` 3.3, ``pytest-catchlog`` has been rolled into the pytest core.
 
 

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 from datetime import datetime, timedelta
 from itertools import product
+import logging
 import re
 
 import jwt
@@ -29,6 +30,12 @@ def params():
 @pytest.fixture
 def secrets():
     return b'secret', b'oldsecret'
+
+
+@pytest.fixture
+def caplog_debug(caplog):
+    caplog.set_level(logging.DEBUG)
+    return caplog
 
 
 class TestJWTSecretProviderFactory(object):
@@ -94,6 +101,7 @@ class TestJWTSecretProviderFactory(object):
             JWTSecretProviderFactory.from_settings(settings)
 
 
+@pytest.mark.usefixtures('caplog_debug')
 class TestJWTSignedParamsService(object):
     @pytest.fixture
     def signing_secret(self, secrets):
@@ -168,6 +176,7 @@ class TestJWTSignedParamsService(object):
             )
 
 
+@pytest.mark.usefixtures('caplog_debug')
 class TestJWTSignedParamsServiceIntegration(object):
     @pytest.fixture(autouse=True)
     def secret_provider(self, config, request_, secrets):
