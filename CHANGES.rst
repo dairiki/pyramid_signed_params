@@ -5,8 +5,14 @@ Changes
 Next Release 0.1b5 (unreleased)
 ===============================
 
+- Use the new in ``PyJWT`` 1.6 more specific ``InvalidSignatureError``
+  in favor of the generic ``DecodeError`` to detect invalid signatures
+  (when available.)
+
 Tests
 -----
+
+- Test under both ``PyJWT`` 1.6 and 1.5.3.
 
 - Fix for changes in default log level in ``pytest`` 3.4.
 

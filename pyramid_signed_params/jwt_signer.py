@@ -23,6 +23,12 @@ from zope.interface import implementer
 
 from .interfaces import IJWTSecretProvider, ISignedParamsService
 
+try:
+    from jwt.exceptions import InvalidSignatureError
+except ImportError:             # pragma: NO COVER
+    # PyJWT < 1.6
+    InvalidSignatureError = DecodeError
+
 
 log = logging.getLogger(__name__)
 
@@ -180,7 +186,7 @@ class JWTSignedParamsService(object):
         secrets = self.secret_provider.valid_secrets(kid)
         assert len(secrets) > 0
         exc_info = None
-        have_decode_error = False
+        have_invalid_signature_error = False
         for secret in secrets:
             try:
                 return jwt.decode(token, secret,
@@ -188,22 +194,19 @@ class JWTSignedParamsService(object):
             except ExpiredSignatureError:
                 # Signature expired. No point trying other secrets.
                 raise
-            except DecodeError:
-                # One reason for a DecodeError is signature
-                # verification failure. Keep trying with remaining
-                # secrets, but remember the first exception.
-                #
+            except InvalidSignatureError:
+                # Note that with PyJWT < 1.6, this is actually a DecodeError.
                 # Note that if we encounter both DecodeErrors and
                 # InvalidKeyErrors, we'd rather report the
                 # DecodeError.
-                if not have_decode_error:
+                if not have_invalid_signature_error:
                     exc_info = sys.exc_info()
-                    have_decode_error = True
+                    have_invalid_signature_error = True
             except InvalidKeyError:
                 # InvalidKeyError is secret-specific as well.
                 if exc_info is None:
                     exc_info = sys.exc_info()
-            except InvalidTokenError:
+            except (InvalidTokenError, DecodeError):
                 # Any other problems are presumably not going to get
                 # better retrying with another secret.  Quit now.
                 raise
