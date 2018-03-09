@@ -2,7 +2,7 @@
 Changes
 *******
 
-Next Release 0.1b5 (unreleased)
+Next Release 0.1b5 (2018-03-08)
 ===============================
 
 - Use the new in ``PyJWT`` 1.6 more specific ``InvalidSignatureError``
