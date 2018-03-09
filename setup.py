@@ -17,8 +17,7 @@ install_requires = [
     ]
 
 tests_require = [
-    'pytest >= 3.0',            # 3.0 required for pytest.approx
-    'pytest-catchlog',
+    'pytest >= 3.3',            # 3.3 required for catchlog
     ]
 
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)

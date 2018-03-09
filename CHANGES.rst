@@ -2,6 +2,15 @@
 Changes
 *******
 
+Next Release 0.1b5 (unreleased)
+===============================
+
+Tests
+-----
+
+- As of ``pytest`` 3.3, ``pytest-catchlog`` has been rolled into the pytest core.
+
+
 Release 0.1b4 (2017-12-18)
 ==========================
 
