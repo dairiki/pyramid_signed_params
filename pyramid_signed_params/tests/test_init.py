@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
-from pyramid.compat import text_type
 from pyramid import testing
 import pytest
+from six import text_type
 from webob.multidict import MultiDict
 
 from pyramid_signed_params.interfaces import ISignedParamsService

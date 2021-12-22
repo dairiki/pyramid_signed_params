@@ -3,7 +3,6 @@
 """
 from __future__ import absolute_import
 
-from collections import Mapping
 from datetime import datetime, timedelta
 import logging
 import sys
@@ -15,17 +14,22 @@ from jwt.exceptions import (
     InvalidKeyError,
     InvalidTokenError,
     )
-from pyramid.compat import binary_type, bytes_, reraise, text_, text_type
 from pyramid.exceptions import ConfigurationError
 from pyramid.settings import aslist
+from six import binary_type, ensure_binary, ensure_text, reraise, text_type
 from webob.multidict import MultiDict
 from zope.interface import implementer
 
 from .interfaces import IJWTSecretProvider, ISignedParamsService
 
 try:
+    from collections.abc import Mapping
+except ImportError:             # py2k
+    from collections import Mapping
+
+try:
     from jwt.exceptions import InvalidSignatureError
-except ImportError:             # pragma: NO COVER
+except ImportError:
     # PyJWT < 1.6
     InvalidSignatureError = DecodeError
 
@@ -54,7 +58,7 @@ class JWTSecretProvider(object):
         if len(secrets) == 0:
             raise ValueError("No secrets?")
         self.request = request
-        self.secrets = tuple(map(bytes_, secrets))
+        self.secrets = tuple(ensure_binary(_, "latin-1") for _ in secrets)
 
     def valid_secrets(self, kid=None):
         secrets = self.secrets
@@ -62,7 +66,7 @@ class JWTSecretProvider(object):
             return secrets
         elif kid == 'csrf':
             session = self.request.session
-            extra = bytes_(session.get_csrf_token())
+            extra = ensure_binary(session.get_csrf_token(), "latin-1")
             return tuple(secret + extra for secret in secrets)
         else:
             raise UnrecognizedKID("Unrecognized kid %r" % kid)
@@ -73,7 +77,7 @@ class JWTSecretProvider(object):
 
 class JWTSecretProviderFactory(object):
     def __init__(self, secrets):
-        self.secrets = tuple(map(bytes_, secrets))
+        self.secrets = tuple(ensure_binary(_, "latin-1") for _ in secrets)
 
     def __call__(self, context, request):
         return JWTSecretProvider(request, self.secrets)
@@ -153,7 +157,7 @@ class JWTSignedParamsService(object):
         token = jwt.encode(claims, secret,
                            algorithm=self.algorithm,
                            headers=headers)
-        return (('_sp', text_(token)),)
+        return (('_sp', ensure_text(token, "latin-1")),)
 
     def signed_params(self, params):
         """Get signed parameters.
