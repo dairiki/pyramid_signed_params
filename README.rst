@@ -121,8 +121,8 @@ Authors
 .. ==== Badges ====
 
 .. |build status| image::
-    https://travis-ci.org/dairiki/pyramid_signed_params.svg?branch=master
-    :target: https://travis-ci.org/dairiki/pyramid_signed_params
+    https://github.com/dairiki/pyramid_signed_params/actions/workflows/tests.yml/badge.svg?branch=master
+    :target: https://github.com/dairiki/pyramid_signed_params/actions/workflows/tests.yml
 
 .. |downloads| image::
     https://img.shields.io/pypi/dm/pyramid_signed_params.svg
