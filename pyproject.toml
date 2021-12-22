@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm>=5"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+norecursedirs = [".tox", "build"]
+
+[tool.coverage.run]
+parallel = true
+source_pkgs = ["pyramid_signed_params"]
+
+[tool.coverage.report]
+omit = ["*/tests*"]

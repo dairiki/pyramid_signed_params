@@ -1,2 +1,2 @@
 include README.rst CHANGES.rst LICENSE.txt
-include tox.ini pytest.ini .coveragerc
+include tox.ini
