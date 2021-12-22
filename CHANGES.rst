@@ -2,10 +2,19 @@
 Changes
 *******
 
-Release 0.1b6 (unreleased)
+Release 1.0.0 (2021-12-21)
 ==========================
 
-No changes yet.
+- Add support for Pyramid 2.0.
+- Mark this as a stable release.
+
+Tests
+-----
+
+- Fix test for ``PyJWT>=2``
+- Test under pythons 3.7 – 3.10. Stop testing under 3.4 and 3.5.
+- Test under PyJWT 1 (as well as latest PyJWT).  Stop testing under PyJWT 1.5.
+
 
 Release 0.1b5 (2018-03-08)
 ==========================
