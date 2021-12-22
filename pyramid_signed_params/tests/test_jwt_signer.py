@@ -162,10 +162,11 @@ class TestJWTSignedParamsService(object):
         assert len(verified) == 0
         assert 'Invalid JWT token' in caplog.text
 
-    def test_signed_params_invalid_alg(self, service, caplog):
+    def test_signed_params_invalid_alg(self, service, caplog, monkeypatch):
         # Test coverage for the ``except InvalidTokenError``
         # clause in JWTSignedParamsService._verify().
-        token = jwt.encode({}, 'secret', headers={'alg': 'bugger'})
+        token = jwt.encode({'_qs': {}}, 'secret', headers={'alg': 'HS256'})
+        monkeypatch.setattr(service, 'accepted_algorithms', ('HS384'))
         verified = service.signed_params({'_sp': token})
         assert len(verified) == 0
         assert any(
