@@ -12,6 +12,7 @@ from jwt.exceptions import (
     DecodeError,
     ExpiredSignatureError,
     InvalidKeyError,
+    InvalidSignatureError,
     InvalidTokenError,
     )
 from pyramid.exceptions import ConfigurationError
@@ -26,12 +27,6 @@ try:
     from collections.abc import Mapping
 except ImportError:             # py2k
     from collections import Mapping
-
-try:
-    from jwt.exceptions import InvalidSignatureError
-except ImportError:
-    # PyJWT < 1.6
-    InvalidSignatureError = DecodeError
 
 
 log = logging.getLogger(__name__)
