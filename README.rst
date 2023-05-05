@@ -2,7 +2,7 @@
 Cryptographically Signed Query Parameters for Pyramid
 #####################################################
 
-|version| |py_versions| |license| |build status|
+|version| |py_versions| |license| |build status| |trackgit|
 
 ***********
 Description
@@ -148,3 +148,7 @@ Authors
     https://img.shields.io/pypi/status/pyramid_signed_params.svg
     :target: https://pypi.python.org/pypi/pyramid_signed_params/
     :alt: Development Status
+.. |trackgit| image::
+    https://us-central1-trackgit-analytics.cloudfunctions.net/token/ping/lhavylcs78qq36q0uxil
+    :target: https://trackgit.com
+    :alt: Trackgit Views
