@@ -12,4 +12,4 @@ parallel = true
 source_pkgs = ["pyramid_signed_params"]
 
 [tool.coverage.report]
-omit = ["*/tests*"]
+omit = ["*/tests/*"]
