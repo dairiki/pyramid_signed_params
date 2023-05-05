@@ -1,11 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-from __future__ import absolute_import
-
-from datetime import datetime, timedelta
 import logging
-import sys
+from collections.abc import Mapping
+from datetime import datetime, timedelta
 
 import jwt
 from jwt.exceptions import (
@@ -17,16 +12,10 @@ from jwt.exceptions import (
     )
 from pyramid.exceptions import ConfigurationError
 from pyramid.settings import aslist
-from six import binary_type, ensure_binary, ensure_text, reraise, text_type
 from webob.multidict import MultiDict
 from zope.interface import implementer
 
 from .interfaces import IJWTSecretProvider, ISignedParamsService
-
-try:
-    from collections.abc import Mapping
-except ImportError:             # py2k
-    from collections import Mapping
 
 
 log = logging.getLogger(__name__)
@@ -48,12 +37,15 @@ def includeme(config):
 
 
 @implementer(IJWTSecretProvider)
-class JWTSecretProvider(object):
+class JWTSecretProvider:
     def __init__(self, request, secrets):
         if len(secrets) == 0:
             raise ValueError("No secrets?")
         self.request = request
-        self.secrets = tuple(ensure_binary(_, "latin-1") for _ in secrets)
+        self.secrets = tuple(
+            sec if isinstance(sec, bytes) else sec.encode("latin-1")
+            for sec in secrets
+        )
 
     def valid_secrets(self, kid=None):
         secrets = self.secrets
@@ -61,7 +53,7 @@ class JWTSecretProvider(object):
             return secrets
         elif kid == 'csrf':
             session = self.request.session
-            extra = ensure_binary(session.get_csrf_token(), "latin-1")
+            extra = session.get_csrf_token().encode("latin-1")
             return tuple(secret + extra for secret in secrets)
         else:
             raise UnrecognizedKID("Unrecognized kid %r" % kid)
@@ -70,9 +62,12 @@ class JWTSecretProvider(object):
         return self.valid_secrets(kid)[0]
 
 
-class JWTSecretProviderFactory(object):
+class JWTSecretProviderFactory:
     def __init__(self, secrets):
-        self.secrets = tuple(ensure_binary(_, "latin-1") for _ in secrets)
+        self.secrets = tuple(
+            sec if isinstance(sec, bytes) else sec.encode("latin-1")
+            for sec in secrets
+        )
 
     def __call__(self, context, request):
         return JWTSecretProvider(request, self.secrets)
@@ -90,7 +85,7 @@ class JWTSecretProviderFactory(object):
 
 
 @implementer(ISignedParamsService)
-class JWTSignedParamsService(object):
+class JWTSignedParamsService:
     algorithm = 'HS256'
     accepted_algorithms = ('HS256', 'HS384', 'HS512')
 
@@ -137,7 +132,7 @@ class JWTSignedParamsService(object):
         """
         if hasattr(params, 'items'):
             params = params.items()
-        params = [(_to_text(key), _to_text(value)) for key, value in params]
+        params = [(str(key), str(value)) for key, value in params]
 
         headers = {}
         secret = self.secret_provider.signing_secret(kid)
@@ -152,7 +147,9 @@ class JWTSignedParamsService(object):
         token = jwt.encode(claims, secret,
                            algorithm=self.algorithm,
                            headers=headers)
-        return (('_sp', ensure_text(token, "latin-1")),)
+        if not isinstance(token, str):
+            token = token.decode("latin-1")  # pyjwt 1.x
+        return (('_sp', token),)
 
     def signed_params(self, params):
         """Get signed parameters.
@@ -184,7 +181,7 @@ class JWTSignedParamsService(object):
         kid = jwt.get_unverified_header(token).get('kid')
         secrets = self.secret_provider.valid_secrets(kid)
         assert len(secrets) > 0
-        exc_info = None
+        saved_exc = None
         have_invalid_signature_error = False
         for secret in secrets:
             try:
@@ -193,36 +190,23 @@ class JWTSignedParamsService(object):
             except ExpiredSignatureError:
                 # Signature expired. No point trying other secrets.
                 raise
-            except InvalidSignatureError:
+            except InvalidSignatureError as exc:
                 # Note that with PyJWT < 1.6, this is actually a DecodeError.
                 # Note that if we encounter both DecodeErrors and
                 # InvalidKeyErrors, we'd rather report the
                 # DecodeError.
                 if not have_invalid_signature_error:
-                    exc_info = sys.exc_info()
+                    saved_exc = exc
                     have_invalid_signature_error = True
-            except InvalidKeyError:
+            except InvalidKeyError as exc:
                 # InvalidKeyError is secret-specific as well.
-                if exc_info is None:
-                    exc_info = sys.exc_info()
+                if saved_exc is None:
+                    saved_exc = exc
             except (InvalidTokenError, DecodeError):
                 # Any other problems are presumably not going to get
                 # better retrying with another secret.  Quit now.
                 raise
-        # reraise saved exception
-        reraise(*exc_info)
-
-
-def _to_text(obj):
-    """ Coerce value to (unicode) text.
-
-    """
-    if not isinstance(obj, text_type):
-        if isinstance(obj, binary_type):
-            obj = obj.decode('ascii', 'strict')
-        else:
-            obj = text_type(obj)
-    return obj
+        raise saved_exc
 
 
 def _getall(params, name):

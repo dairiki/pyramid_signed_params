@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-"""
-from __future__ import absolute_import
-
 from webob.multidict import MultiDict
 
 from .interfaces import ISignedParamsService

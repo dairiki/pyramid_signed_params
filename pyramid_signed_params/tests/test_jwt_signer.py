@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
-
 from datetime import datetime, timedelta
 from itertools import product
 import logging
@@ -17,7 +14,6 @@ from pyramid_signed_params.jwt_signer import (
     JWTSecretProvider,
     JWTSignedParamsService,
     JWTSecretProviderFactory,
-    _to_text,
     _getall,
     )
 
@@ -38,7 +34,7 @@ def caplog_debug(caplog):
     return caplog
 
 
-class TestJWTSecretProviderFactory(object):
+class TestJWTSecretProviderFactory:
     @pytest.fixture
     def secret_provider(self, request_, secrets):
         return JWTSecretProvider(request_, secrets)
@@ -102,7 +98,7 @@ class TestJWTSecretProviderFactory(object):
 
 
 @pytest.mark.usefixtures('caplog_debug')
-class TestJWTSignedParamsService(object):
+class TestJWTSignedParamsService:
     @pytest.fixture
     def signing_secret(self, secrets):
         return secrets[0]
@@ -121,7 +117,7 @@ class TestJWTSignedParamsService(object):
     @pytest.mark.parametrize('max_age', [None, 30])
     @pytest.mark.parametrize('params', [
         [],
-        {'a': u'böø'},
+        {'a': 'böø'},
         [('foo', 'bar'), ('foo', 'baz')],
         ])
     @pytest.mark.parametrize('signing_secret', [
@@ -178,7 +174,7 @@ class TestJWTSignedParamsService(object):
 
 
 @pytest.mark.usefixtures('caplog_debug')
-class TestJWTSignedParamsServiceIntegration(object):
+class TestJWTSignedParamsServiceIntegration:
     @pytest.fixture(autouse=True)
     def secret_provider(self, config, request_, secrets):
         provider = JWTSecretProvider(request_, secrets)
@@ -202,15 +198,6 @@ class TestJWTSignedParamsServiceIntegration(object):
         assert 'Unrecognized kid ' in caplog.text
 
 
-@pytest.mark.parametrize('obj, expected', [
-    (u'Fü', u'Fü'),
-    ('Fu', u'Fu'),
-    (42, u'42'),
-    ])
-def test_to_text(obj, expected):
-    assert _to_text(obj) == expected
-
-
 items = [
     ('k', 'v1'),
     ('x', 'v2'),
@@ -228,7 +215,7 @@ def test_getall(params, expected):
     assert _getall(params, 'k') == expected
 
 
-class DummySecretProvider(object):
+class DummySecretProvider:
     def __init__(self, secrets, signing_secret=None):
         if signing_secret is None:
             signing_secret = secrets[0]  # if len(secrets) > 0 else None

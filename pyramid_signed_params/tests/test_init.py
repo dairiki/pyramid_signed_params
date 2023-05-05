@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
-
 from pyramid import testing
 import pytest
-from six import text_type
 from webob.multidict import MultiDict
 
 from pyramid_signed_params.interfaces import ISignedParamsService
@@ -22,7 +18,7 @@ def params():
     return {'foo': 'bar'}
 
 
-class Test_includeme(object):
+class Test_includeme:
     # This is a basic functional test of the whole system.
     @pytest.fixture
     def settings(self):
@@ -64,7 +60,7 @@ def test_sign_query(request_, params, signed_params_service):
     signed_params_service.signed_params(signed) == params
 
 
-class DummySignedParamsService(object):
+class DummySignedParamsService:
     def __init__(self, prefix='_signed_'):
         self.prefix = prefix
 
@@ -72,11 +68,11 @@ class DummySignedParamsService(object):
         prefix = self.prefix
         if hasattr(params, 'items'):
             params = params.items()
-        signed = [(u'%s%s' % (prefix, k), text_type(v)) for k, v in params]
+        signed = [(f"{prefix}{k}", v) for k, v in params]
         if max_age is not None:
-            signed.append((u'max_age', text_type(max_age)))
+            signed.append(('max_age', f"{max_age:d}"))
         if kid is not None:
-            signed.append((u'kid', kid))
+            signed.append(('kid', kid))
         return signed
 
     def signed_params(self, params):
