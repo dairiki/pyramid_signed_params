@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from itertools import product
 import logging
 import re
@@ -137,8 +137,8 @@ class TestJWTSignedParamsService:
         assert 'Signature verification failed' in caplog.text
 
     def test_expired(self, service, params, caplog):
-        a_minute_ago = datetime.utcnow() - timedelta(60)
-        service._utcnow = lambda: a_minute_ago
+        a_minute_ago = datetime.now(tz=timezone.utc) - timedelta(60)
+        service._now = lambda tz: a_minute_ago
         signed = service.sign_query(params,  max_age=30)
         verified = service.signed_params(signed)
         assert not verified

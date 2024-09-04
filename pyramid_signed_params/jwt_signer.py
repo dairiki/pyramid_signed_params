@@ -1,6 +1,6 @@
 import logging
 from collections.abc import Mapping
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import jwt
 from jwt.exceptions import (
@@ -89,7 +89,7 @@ class JWTSignedParamsService:
     algorithm = 'HS256'
     accepted_algorithms = ('HS256', 'HS384', 'HS512')
 
-    _utcnow = staticmethod(datetime.utcnow)  # testing
+    _now = staticmethod(datetime.now)  # testing
 
     def __init__(self, context, request):
         self.secret_provider = request.find_service(IJWTSecretProvider)
@@ -142,7 +142,7 @@ class JWTSignedParamsService:
         if max_age is not None:
             if not isinstance(max_age, timedelta):
                 max_age = timedelta(seconds=max_age)
-            claims['exp'] = self._utcnow() + max_age
+            claims['exp'] = self._now(tz=timezone.utc) + max_age
 
         token = jwt.encode(claims, secret,
                            algorithm=self.algorithm,
