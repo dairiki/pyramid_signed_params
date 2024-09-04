@@ -5,7 +5,7 @@ Changes
 Release 1.1.0 (unreleased)
 ==========================
 
-- Drop support for python 2.7 & 3.6.  Test under python 3.11.
+- Drop support for python 2.7, 3.6, and 3.7.  Test under python 3.11, and 3.12.
 
 Release 1.0.0 (2021-12-21)
 ==========================
