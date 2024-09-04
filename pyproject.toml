@@ -1,8 +1,54 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm>=5"]
-build-backend = "setuptools.build_meta"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
-[tool.setuptools_scm]
+[project]
+name = "pyramid-signed-params"
+dynamic = ["version", "readme"]
+description = "Cryptographically signed query parameters for pyramid"
+authors = [
+    {name = "Jeff Dairiki", email = "dairiki@dairiki.org"},
+]
+license = {text = "BSD"}
+keywords = ["web pyramid cryptography query_string"]
+urls.Homepage = "https://github.com/dairiki/pyramid_signed_params"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Pyramid",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: CGI Tools/Libraries",
+]
+
+requires-python = ">= 3.8"
+dependencies = [
+    "pyjwt>=1.3",
+    "pyramid",
+    "pyramid_services",
+]
+
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.build]
+source-includes = ["README.rst", "CHANGES.rst"]
+
+[tool.pdm.version]
+source = "scm"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=6",
+]
 
 [tool.pytest.ini_options]
 norecursedirs = [".tox", "build"]
@@ -13,3 +59,5 @@ source_pkgs = ["pyramid_signed_params"]
 
 [tool.coverage.report]
 omit = ["*/tests/*"]
+
+
